@@ -1,0 +1,3 @@
+../Core/Src/spi_handler.c:9:10:spi_read_reg	1
+../Core/Src/spi_handler.c:22:6:spi_write_reg	1
+../Core/Src/spi_handler.c:33:6:displayTempData	1
