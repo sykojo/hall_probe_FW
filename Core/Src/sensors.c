@@ -177,9 +177,9 @@ void read_test_reg(Sensor *sen) {
 }
 
 void device_config(Sensor *sen) {
-	//Current value: 0x1020 → 0b0001 0000 0010 0000
+	//Current value: 0x5020 → 0b0101 0000 0010 0000
 	uint16_t *pRegData = &(sen->DEVICE_CONFIG.data);
-	writeToRegister(pRegData, CONV_AVG, 0x01); // Best SNR
+	writeToRegister(pRegData, CONV_AVG, 0x05); // Best SNR
 	writeToRegister(pRegData, OPERATING_MODE, 0x2); //Continuous conversion
 
 	select_sensor(sen->adr);

@@ -42,7 +42,7 @@
 #define NUM_OF_SENSORS 8
 #define NUM_OF_AXIS 2
 
-#define PERIOD 10
+#define PERIOD 10 //ms
 uint8_t fake=0;
 
 /* USER CODE END PD */
