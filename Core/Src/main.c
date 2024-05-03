@@ -42,7 +42,7 @@
 #define NUM_OF_SENSORS 8
 #define NUM_OF_AXIS 2
 
-#define PERIOD 10 //ms
+#define PERIOD 0 //ms
 uint8_t fake=0;
 
 /* USER CODE END PD */
@@ -57,13 +57,10 @@ uint8_t fake=0;
 /* USER CODE BEGIN PV */
 
 uint16_t cnt = 0;
-
 uint8_t data_ready = 0;
-
 uint8_t measure = 1;
-
 uint8_t data_rec = 0;
-
+uint8_t app_wants_data = 0;
 uint32_t time_start = 0;
 float time_read = 0;
 
@@ -164,6 +161,23 @@ int main(void)
 
 		if (min_tim > 0)
 		{
+			if (uart_rec)
+			{
+				switch (data_rec)
+				{
+				case 's':
+					measure = 1;
+					break;
+				case 'd':
+					measure = 0;
+					break;
+				case '?':
+					app_wants_data = 1;
+				}
+				uart_rec = 0;
+				HAL_UART_Receive_DMA(&huart4, &data_rec, 1);
+			}
+
 			read_time();
 			cnt++;
 			if (cnt >= PERIOD)
@@ -193,33 +207,20 @@ int main(void)
 				}
 			}
 
-			if (data_ready)
+			if (data_ready && app_wants_data)
 			{
 
 				HAL_UART_Transmit_DMA(&huart4, (uint8_t*)&msg, sizeof(msg));
 				data_ready = 0;
+				app_wants_data = 0;
 				time_read = read_time();
 			}
 
-			if (uart_rec)
-			{
-				switch (uart_rec)
-				{
-				case 's':
-					measure = 1;
-					break;
-				case 'd':
-					measure = 0;
-					break;
-				}
-				uart_rec = 0;
-				HAL_UART_Receive_DMA(&huart4, &data_rec, 1);
-			}
 
-			if (error_tim >= PERIOD)
-			{
-				errorLED();
-			}
+//			if (error_tim >= PERIOD)
+//			{
+//				errorLED();
+//			}
 			error_tim = 0;
 
 			min_tim = 0;
